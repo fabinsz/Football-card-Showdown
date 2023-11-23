@@ -13,8 +13,6 @@ class Deck:
             self.deck_cheio = True
             print("Seu deck está cheio! Não é possível adicionar mais cartas.")
             # Adicione a cor vermelha quando o deck estiver cheio
-            for outra_carta in self.cartas:
-                carta.brilhar((255, 0, 0))
 
     def mostrar_cartas(self):
         if not self.cartas:
