@@ -16,7 +16,7 @@ BLACK = (0, 0, 0)
 
 # Configurar a tela
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Meu Jogo de Cartas")
+pygame.display.set_caption("Football card Showdown")
 
 # Fonte para o texto
 font = pygame.font.Font(None, 36)
@@ -25,16 +25,16 @@ font = pygame.font.Font(None, 36)
 def criar_cartas_disponiveis():
     cartas_disponiveis = [
         Carta("Carta 1", 50, 50),
-        Carta("Carta 2", 150, 50),
-        Carta("Carta 3", 250, 50),
-        Carta("Carta 2", 150, 50),  # Carta com o mesmo nome
-        Carta("Carta 3", 250, 50),  # Carta com o mesmo nome
+        Carta("Carta 2", 250, 50),
+        Carta("Carta 3", 450, 50),
+        Carta("Carta 2", 250, 50),  # Carta com o mesmo nome
+        Carta("Carta 3", 450, 50),  # Carta com o mesmo nome
         Carta("Carta 1", 50, 50),  # Carta com o mesmo nome
-        Carta("Carta 2", 150, 50),  # Carta com o mesmo nome
-        Carta("Carta 3", 250, 50),  # Carta com o mesmo nome
+        Carta("Carta 2", 250, 50),  # Carta com o mesmo nome
+        Carta("Carta 3", 450, 50),  # Carta com o mesmo nome
         Carta("Carta 1", 50, 50),
-        Carta("Carta 4", 350, 50),
-        Carta("Carta 4", 350, 50),# Carta com o mesmo nome
+        Carta("Carta 4", 650, 50),
+        Carta("Carta 4", 650, 50),# Carta com o mesmo nome
     ]
     return cartas_disponiveis
 
@@ -80,6 +80,18 @@ def main():
                             last_click_time = current_time  # Atualizar o tempo do último clique
                             break  # Saia do loop após adicionar uma carta ao deck
 
+            # Adicione esta parte para lidar com o efeito de brilho
+            elif event.type == pygame.MOUSEMOTION:
+                for carta in all_sprites:
+                    if carta.rect.collidepoint(pygame.mouse.get_pos()):
+                        carta.brilhar()
+                    else:
+                        carta.brilho = False
+
+            # Verifique se a tecla "D" foi pressionada
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_d:
+                deck_jogador.mostrar_cartas()
+
         # Limitar o número de mensagens a serem exibidas
         mensagens = mensagens[:1]
 
@@ -93,7 +105,7 @@ def main():
         # Exibir a mensagem de deck cheio na tela, se aplicável
         if deck_jogador.deck_cheio:
             mensagem_deck_cheio = font.render("Deck cheio! Não é possível adicionar mais cartas.", True, BLACK)
-            screen.blit(mensagem_deck_cheio, (10, 10))
+            screen.blit(mensagem_deck_cheio, (100, 550))
 
         # Exibir as mensagens mais recentes na tela
         y_pos = 10 if deck_jogador.deck_cheio else 10
