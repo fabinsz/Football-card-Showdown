@@ -7,12 +7,14 @@ from Classes.deck import Deck
 pygame.init()
 
 # Definir constantes
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 1000, 800
 FPS = 60
 
 # Cores
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+BROWN = (139, 69, 19) 
+YELLOW = (255, 255, 0)
 
 # Configurar a tela
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -25,18 +27,22 @@ font = pygame.font.Font(None, 36)
 def criar_cartas_disponiveis():
     cartas_disponiveis = [
         Carta("Carta 1", 50, 50),
-        Carta("Carta 2", 250, 50),
-        Carta("Carta 3", 450, 50),
-        Carta("Carta 2", 250, 50),  # Carta com o mesmo nome
-        Carta("Carta 3", 450, 50),  # Carta com o mesmo nome
-        Carta("Carta 1", 50, 50),  # Carta com o mesmo nome
-        Carta("Carta 2", 250, 50),  # Carta com o mesmo nome
-        Carta("Carta 3", 450, 50),  # Carta com o mesmo nome
+        Carta("Carta 2", 170, 50),
+        Carta("Carta 3", 290, 50),
+        Carta("Carta 2", 170, 50),  
+        Carta("Carta 3", 290, 50),  
+        Carta("Carta 1", 50, 50),  
+        Carta("Carta 2", 170, 50),  
+        Carta("Carta 3", 290, 50),  
         Carta("Carta 1", 50, 50),
-        Carta("Carta 4", 650, 50),
-        Carta("Carta 4", 650, 50),# Carta com o mesmo nome
+        Carta("Carta 4", 410, 50),
+        Carta("Carta 4", 410, 50),
     ]
     return cartas_disponiveis
+
+def desenhar_slots(screen, slots_vazios):
+    for slot in slots_vazios:
+        pygame.draw.rect(screen, WHITE, slot)
 
 # Função principal
 def main():
@@ -45,40 +51,71 @@ def main():
 
     # Crie algumas cartas disponíveis
     cartas_disponiveis = criar_cartas_disponiveis()
+    
+    # Crie uma lista para armazenar os slots vazios
+    slots_vazios = [
+        (30, 600, 100, 150),  
+        (150, 600, 100, 150),
+        (270, 600, 100, 150),
+        (390, 600, 100, 150),
+        (510, 600, 100, 150),
+        (630, 600, 100, 150),
+        (750, 600, 100, 150),
+        (870, 600, 100, 150),
+        
+    ]
 
     # Crie um grupo de sprites para as cartas
     all_sprites = pygame.sprite.Group()
     all_sprites.add(*cartas_disponiveis)
 
-    # Lista de mensagens
-    mensagens = []
-
-    # Cooldown para evitar cliques rápidos
-    cooldown = 500  # em milissegundos
-    last_click_time = 0
-
     # Interface para o jogador escolher as cartas
     running = True
     clock = pygame.time.Clock()
+    
+    carta_em_arrasto = None  # Variável para rastrear qual carta está sendo arrastada
     while running:
         # Lidar com eventos
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                current_time = pygame.time.get_ticks()
-                if current_time - last_click_time > cooldown:
-                   # Verificar se o deck está cheio
-                  if not deck_jogador.deck_cheio:
-                    # Verificar colisão com os sprites
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  # Botão esquerdo do mouse pressionado
                     for carta in all_sprites:
                         if carta.rect.collidepoint(pygame.mouse.get_pos()):
-                            carta.kill()
-                            deck_jogador.adicionar_carta(carta)
-                            mensagem = f"{carta.nome} adicionada ao seu deck."
-                            mensagens.insert(0, {"texto": mensagem, "tempo": pygame.time.get_ticks()})  # Adiciona a mensagem no início da lista
-                            last_click_time = current_time  # Atualizar o tempo do último clique
-                            break  # Saia do loop após adicionar uma carta ao deck
+                            carta_em_arrasto = carta
+                            carta_em_arrasto.sendo_arrastada = True
+                            break
+            
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1 and carta_em_arrasto:
+                    carta_em_arrasto.sendo_arrastada = False
+                    # Verificar se a carta foi solta dentro de um slot
+                    for i, slot in enumerate(slots_vazios):
+                        if pygame.mouse.get_pos()[0] in range(slot[0], slot[0] + slot[2]) and \
+                           pygame.mouse.get_pos()[1] in range(slot[1], slot[1] + slot[3]):
+                            # A carta foi solta dentro de um slot, ajuste a posição e atributos
+                            carta_em_arrasto.em_slot = True
+                            carta_em_arrasto.slot_rect = slot
+                            carta_em_arrasto.rect.topleft = (slot[0], slot[1])  # Ajusta a posição da carta para o canto superior esquerdo do slot
+                            deck_jogador.adicionar_carta(carta_em_arrasto)
+                            # Remova o slot da lista de slots_vazios
+                            slots_vazios.pop(i)
+                            break
+                    else:
+                        # A carta foi solta fora de um slot, volte para a posição inicial
+                        if carta_em_arrasto:  # Verifica se a carta_em_arrasto não é None
+                            carta_em_arrasto.rect.topleft = carta_em_arrasto.pos_inicial
+                            # Adiciona a carta de volta ao grupo de sprites
+                            all_sprites.add(carta_em_arrasto)
+                            
+                            # Adiciona o slot de volta à lista de slots_vazios
+                            x, y, largura, altura = carta_em_arrasto.slot_rect
+                            slots_vazios.append((x, y, largura, altura))
+                            # Remove a carta do deck
+                            deck_jogador.remover_carta(carta_em_arrasto)
+                           
+
 
             # Adicione esta parte para lidar com o efeito de brilho
             elif event.type == pygame.MOUSEMOTION:
@@ -92,42 +129,39 @@ def main():
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_d:
                 deck_jogador.mostrar_cartas()
 
-        # Limitar o número de mensagens a serem exibidas
-        mensagens = mensagens[:1]
-
+        # Definir as propriedades dos retângulos brancos
+        slot_width, slot_height = 100, 150
+        slot_spacing = 120
+        slot_start_x = 30
+        slot_start_y = 600
+        
         # Atualizar a tela
         all_sprites.update()
-
+    
         # Desenhar na tela
         screen.fill(WHITE)
-        all_sprites.draw(screen)
-
-        # Exibir a mensagem de deck cheio na tela, se aplicável
-        if deck_jogador.deck_cheio:
-            mensagem_deck_cheio = font.render("Deck cheio! Não é possível adicionar mais cartas.", True, BLACK)
-            screen.blit(mensagem_deck_cheio, (100, 550))
-
-        # Exibir as mensagens mais recentes na tela
-        y_pos = 10 if deck_jogador.deck_cheio else 10
-        mensagens_a_remover = []
-        for i, mensagem_info in enumerate(mensagens):
-            tempo_atual = pygame.time.get_ticks()
-            tempo_inicial = mensagem_info["tempo"]
-            duracao = 1000
-
-            if tempo_atual < tempo_inicial + duracao:
-                texto = font.render(mensagem_info["texto"], True, BLACK)
-                screen.blit(texto, (10, y_pos))
-                y_pos += 30
-            else:
-                mensagens_a_remover.append(i)
-
-        # Remove as mensagens expiradas da lista
-        for i in mensagens_a_remover:
-            mensagens.pop(i)
-
+        
+        desenhar_slots(screen, slots_vazios)  # Desenha os slots antes das cartas
+        
+        pygame.draw.rect(screen, BROWN, (0, 550, 1000, 250))  # (x, y, largura, altura)
+        
+        # Desenhar os retângulos brancos usando um loop
+        for i in range(8):
+         x = slot_start_x + i * slot_spacing
+         pygame.draw.rect(screen, WHITE, (x, slot_start_y, slot_width, slot_height))
+        
+        # Atualizar posição da carta sendo arrastada
+        if carta_em_arrasto:
+            carta_em_arrasto.update()        
+                
+        # Desenhar os slots após as cartas
+        desenhar_slots(screen, slots_vazios)  
+        
+        all_sprites.draw(screen)      
+        
         # Atualizar a tela
         pygame.display.flip()
+        
 
         # Define o FPS
         clock.tick(FPS)

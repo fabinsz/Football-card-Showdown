@@ -9,6 +9,7 @@ class Deck:
     def adicionar_carta(self, carta):
         if len(self.cartas) < self.limite_maximo:
             self.cartas.append(carta)
+            carta.em_slot = False  # Indicamos que a carta não está mais em um slot
         else:
             self.deck_cheio = True
             print("Seu deck está cheio! Não é possível adicionar mais cartas.")
@@ -21,3 +22,7 @@ class Deck:
             print("Cartas no deck:")
             for carta in self.cartas:
                 print(carta.nome)
+     
+    def remover_carta(self, carta):
+        if carta in self.cartas:
+            self.cartas.remove(carta)         
