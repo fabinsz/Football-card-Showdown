@@ -156,9 +156,10 @@ def main():
             elif event.type == pygame.MOUSEMOTION:
                 for carta in all_sprites:
                     if carta.rect.collidepoint(pygame.mouse.get_pos()):
-                        carta.brilhar()
+                        carta.brilho = True
                     else:
                         carta.brilho = False
+                        
 
             # Verifique se a tecla "D" foi pressionada
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_d:

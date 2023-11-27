@@ -16,3 +16,6 @@ class CartaAumentada(pygame.sprite.Sprite):
 
         # Mantenha uma referência à carta original
         self.carta_original = carta_original
+        
+        self.brilho = True
+        

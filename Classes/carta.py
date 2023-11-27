@@ -25,9 +25,7 @@ class Carta(pygame.sprite.Sprite):
     def atualizar_cor(self):
         self.image.fill(self.cor)  # Atualiza a cor da imagem
     
-    def brilhar(self):
-        self.brilho = True
-    
+
     def update(self):
         if self.brilho:
             # Altere a cor para a cor de brilho desejada
