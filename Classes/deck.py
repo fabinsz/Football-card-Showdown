@@ -1,4 +1,4 @@
-import pygame
+
 
 class Deck:
     def __init__(self, limite_maximo=8):

@@ -1,10 +1,13 @@
 import pygame
 import sys
+import os
 from Classes.carta import Carta
 from Classes.deck import Deck
 from Classes.carta_ampliada import CartaAumentada
 from Classes.Descriçao import DescricaoCarta
 
+nome_fonte = "BAHNSCHRIFT.TTF"
+caminho_fonte = os.path.join(os.path.dirname(__file__), "Fonts", nome_fonte)
 
 # Inicialização do Pygame
 pygame.init()
@@ -27,8 +30,8 @@ DARK_BLUE = (10, 16, 28)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Football card Showdown")
 
-# Fonte para o texto
-font = pygame.font.Font(None, 36)
+
+font = pygame.font.Font(caminho_fonte, 36)
 
 
 def criar_cartas_disponiveis():
@@ -62,6 +65,7 @@ def main():
     cartas_disponiveis = criar_cartas_disponiveis()
     
     
+    
     # Crie uma lista para armazenar os slots vazios
     slots_vazios = [
         (30, 600, 100, 150),  
@@ -80,14 +84,13 @@ def main():
     all_sprites = pygame.sprite.Group()
     all_sprites.add(*cartas_disponiveis)
         
-    
     # Interface para o jogador escolher as cartas
     running = True
     clock = pygame.time.Clock()
     
     # Crie um grupo de sprites para a descrição da carta
     descricao_carta = pygame.sprite.Group()
-    
+ 
     carta_em_arrasto = None  # Variável para rastrear qual carta está sendo arrastada
 
     carta_aumentada = None
@@ -163,7 +166,7 @@ def main():
 
             # Verifique se a tecla "D" foi pressionada
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_d:
-                deck_jogador.mostrar_cartas()
+                deck_jogador.mostrar_cartas() 
 
         # Definir as propriedades dos retângulos brancos
         slot_width, slot_height = 100, 150
@@ -210,10 +213,10 @@ def main():
 
         # Define o FPS
         clock.tick(FPS)
-
+               
     # Encerrar o Pygame
     pygame.quit()
-    sys.exit()
+    sys.exit() 
 
 if __name__ == "__main__":
     main()
