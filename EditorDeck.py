@@ -6,8 +6,9 @@ from Classes.deck import Deck
 from Classes.carta_ampliada import CartaAumentada
 from Classes.Descriçao import DescricaoCarta
 
+
 nome_fonte = "BAHNSCHRIFT.TTF"
-caminho_fonte = os.path.join(os.path.dirname(__file__), "Fonts", nome_fonte)
+caminho_fonte = os.path.join(os.path.dirname(__file__), "Fontes", nome_fonte)
 
 # Inicialização do Pygame
 pygame.init()
@@ -28,7 +29,7 @@ DARK_BLUE = (10, 16, 28)
 
 # Configurar a tela
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Football card Showdown")
+pygame.display.set_caption("Fut Champions")
 
 
 font = pygame.font.Font(caminho_fonte, 36)
@@ -54,7 +55,42 @@ def desenhar_slots(screen, slots_vazios):
     for slot in slots_vazios:
         pygame.draw.rect(screen, LIGHT_GRAY, slot)
 
+class Button:
+    def __init__(self):
+        self.left = 40
+        self.top = 460
+        self.length = 232
+        self.height = 41
+        self.normal_color = [73, 49, 49]
+        self.hover_color = [10, 16, 28]
+        self.color = self.normal_color
+        self.text_color = [255, 255, 255]
+        self.mouse_was_pressed = False
+        self.text_size = 30
+        self.text = "Salvar/Sair"
 
+    def render(self):
+        retangulo = pygame.Rect(self.left, self.top, self.length, self.height)
+        mouse_got_pressed = pygame.mouse.get_pressed()[0]
+        mouse_was_clicked = mouse_got_pressed and not self.mouse_was_pressed
+
+        self.mouse_was_pressed = mouse_got_pressed
+        mouse_left, mouse_top = pygame.mouse.get_pos()
+
+        is_mouse_collision = retangulo.collidepoint(mouse_left, mouse_top)
+        self.color = self.hover_color if is_mouse_collision else self.normal_color
+
+        font = pygame.font.Font(None, self.text_size)
+        text_surface = font.render(self.text, True, self.text_color)
+        text_rect = text_surface.get_rect(center=(self.left + self.length / 2, self.top + self.height / 2))
+
+        pygame.draw.rect(screen, self.color, retangulo)
+        screen.blit(text_surface, text_rect)
+
+    def get_clicked(self):
+        return self.mouse_was_pressed
+
+button = Button()
 
 # Função principal
 def main():
@@ -204,8 +240,14 @@ def main():
         # Desenhar os slots após as cartas
         desenhar_slots(screen, slots_vazios) 
          
+        button.render()
         
         all_sprites.draw(screen)      
+        
+        
+        
+        if button.get_clicked():
+            print("clicou")
         
         # Atualizar a tela
         pygame.display.flip()

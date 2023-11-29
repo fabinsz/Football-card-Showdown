@@ -2,7 +2,7 @@ import pygame
 import os
 
 nome_fonte = "BAHNSCHRIFT.TTF"
-caminho_fonte = os.path.join(os.path.dirname(os.path.dirname(__file__)), "Fonts", nome_fonte)
+caminho_fonte = os.path.join(os.path.dirname(os.path.dirname(__file__)), "Fontes", nome_fonte)
 
 class DescricaoCarta(pygame.sprite.Sprite):
     def __init__(self, descricao, x, y):
