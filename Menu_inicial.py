@@ -1,6 +1,7 @@
 import sys
 import pygame
-import EditorDeck
+import os
+
 
 pygame.init()
 screen = pygame.display.set_mode((1043, 755))
@@ -69,15 +70,20 @@ while True:
             pygame.quit()
             sys.exit()
         
+        #Estrutura para clicar em "Sair"
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            # Verifica se o botão "Sair" foi clicado
             if button_rect4.collidepoint(mouse_x, mouse_y):
                 pygame.quit()
+                login_script = os.path.join(os.path.dirname(__file__), "Login.py")
+                os.system(f"python {login_script}")
                 sys.exit()
-        
-         # Verifica se o botão "Editar Deck" foi clicado
+                
+        #Estrutura para clicar em "Editar Deck"
             elif button_rect3.collidepoint(mouse_x, mouse_y):
-                EditorDeck.main()        
+                pygame.quit()
+                editordeck_script = os.path.join(os.path.dirname(__file__), "EditorDeck.py")
+                os.system(f"python {editordeck_script}")
+                sys.exit()
     
     # Obtém as coordenadas do mouse
     mouse_x, mouse_y = pygame.mouse.get_pos()
