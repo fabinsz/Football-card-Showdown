@@ -1,5 +1,6 @@
 import sys
 import pygame
+import EditorDeck
 
 pygame.init()
 screen = pygame.display.set_mode((1043, 755))
@@ -10,7 +11,7 @@ clock = pygame.time.Clock()
 background_surface = pygame.image.load('Imagens/Menu principal.jpeg')
 
 # Carrega as fontes
-gamename_font = pygame.font.Font('Fontes/Vina sans.ttf', 40)
+gamename_font = pygame.font.Font('Fontes/FRAHV.TTF', 35)
 button_font = pygame.font.Font('Fontes/Karla.ttf', 30)
 
 # Cores
@@ -67,7 +68,17 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-
+        
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            # Verifica se o botão "Sair" foi clicado
+            if button_rect4.collidepoint(mouse_x, mouse_y):
+                pygame.quit()
+                sys.exit()
+        
+         # Verifica se o botão "Editar Deck" foi clicado
+            elif button_rect3.collidepoint(mouse_x, mouse_y):
+                EditorDeck.main()        
+    
     # Obtém as coordenadas do mouse
     mouse_x, mouse_y = pygame.mouse.get_pos()
 
