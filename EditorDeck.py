@@ -14,7 +14,7 @@ caminho_fonte = os.path.join(os.path.dirname(__file__), "Fontes", nome_fonte)
 pygame.init()
 
 # Definir constantes
-WIDTH, HEIGHT = 1000, 800
+WIDTH, HEIGHT = 1043, 755
 FPS = 60
 
 # Cores
@@ -72,7 +72,7 @@ class Button:
     def render(self):
         retangulo = pygame.Rect(self.left, self.top, self.length, self.height)
         mouse_got_pressed = pygame.mouse.get_pressed()[0]
-        mouse_was_clicked = mouse_got_pressed and not self.mouse_was_pressed
+        self.mouse_was_clicked = mouse_got_pressed and not self.mouse_was_pressed
 
         self.mouse_was_pressed = mouse_got_pressed
         mouse_left, mouse_top = pygame.mouse.get_pos()
@@ -88,7 +88,7 @@ class Button:
         screen.blit(text_surface, text_rect)
 
     def get_clicked(self):
-        return self.mouse_was_pressed
+        return self.mouse_was_clicked
 
 button = Button()
 
@@ -104,14 +104,14 @@ def main():
     
     # Crie uma lista para armazenar os slots vazios
     slots_vazios = [
-        (30, 600, 100, 150),  
-        (150, 600, 100, 150),
-        (270, 600, 100, 150),
-        (390, 600, 100, 150),
-        (510, 600, 100, 150),
-        (630, 600, 100, 150),
-        (750, 600, 100, 150),
-        (870, 600, 100, 150),
+        (50, 580, 100, 150),  
+        (170, 580, 100, 150),
+        (290, 580, 100, 150),
+        (410, 580, 100, 150),
+        (530, 580, 100, 150),
+        (650, 580, 100, 150),
+        (770, 580, 100, 150),
+        (890, 580, 100, 150),
         
     ]
     
@@ -180,6 +180,7 @@ def main():
                             descricao_carta.empty()
                             # Remove a carta do deck
                             deck_jogador.remover_carta(carta_em_arrasto)
+                     
                      # Remova a carta aumentada
                     if carta_aumentada:
                        all_sprites.remove(carta_aumentada)
@@ -207,8 +208,8 @@ def main():
         # Definir as propriedades dos retângulos brancos
         slot_width, slot_height = 100, 150
         slot_spacing = 120
-        slot_start_x = 30
-        slot_start_y = 600
+        slot_start_x = 50
+        slot_start_y = 580
         
         # Atualizar a tela
         all_sprites.update()
@@ -219,7 +220,7 @@ def main():
         
         desenhar_slots(screen, slots_vazios)  # Desenha os slots antes das cartas
         
-        pygame.draw.rect(screen, DARK_RED, (0, 550, 1000, 250))  # (x, y, largura, altura)
+        pygame.draw.rect(screen, DARK_RED, (0, 550, 1100, 250))  # (x, y, largura, altura)
         
         pygame.draw.rect(screen, LIGHT_GRAY, (0, 0, 300, 550))  # (x, y, largura, altura)
         
@@ -244,10 +245,6 @@ def main():
         
         all_sprites.draw(screen)      
         
-        
-        
-        if button.get_clicked():
-            print("clicou")
         
         # Atualizar a tela
         pygame.display.flip()
