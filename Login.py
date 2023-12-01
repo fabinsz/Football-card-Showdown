@@ -8,8 +8,8 @@ pygame.display.set_caption('Fut Champions')
 clock = pygame.time.Clock()
 
 # Fonte
-main_font = pygame.font.Font('Fontes/Karla.ttf', 20)
-other_font = pygame.font.Font('Fontes/Karla.ttf', 15)
+main_font = pygame.font.Font('Fontes/Bahnschrift.ttf', 20)
+other_font = pygame.font.Font('Fontes/Bahnschrift.ttf', 15)
 title_font_bold = pygame.font.Font('Fontes/Karla.ttf', 30)
 title_font_bold.set_bold(True)
 
