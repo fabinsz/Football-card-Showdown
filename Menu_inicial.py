@@ -13,7 +13,7 @@ background_surface = pygame.image.load('Imagens/Menu principal.jpeg')
 
 # Carrega as fontes
 gamename_font = pygame.font.Font('Fontes/FRAHV.TTF', 35)
-button_font = pygame.font.Font('Fontes/Karla.ttf', 30)
+button_font = pygame.font.Font('Fontes/Bahnschrift.ttf', 24)
 
 # Cores
 brown_color = (73, 49, 49)
