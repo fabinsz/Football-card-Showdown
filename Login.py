@@ -49,7 +49,7 @@ def create_button(text, font, text_color, button_color, btn_width, btn_height, p
 
 # Cria o botão "Crie sua conta"
 button_criar_conta, button_rect_criar_conta = create_button(
-    'Crie sua conta', main_font, black_color, white_color,
+    'Crie sua conta', main_font, black_color, gray_color,
     200, 20, (rectangle.get_width() // 3.5, 700)
 )
 
