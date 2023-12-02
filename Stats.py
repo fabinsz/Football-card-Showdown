@@ -19,7 +19,7 @@ black_color = (0, 0, 0)
 brown_color = (79, 45, 45)
 
 # Carrega e redimensiona a imagem de fundo
-background_surface = pygame.image.load('Imagens/stats.png')
+background_surface = pygame.image.load('Imagens/campinho tatico.jpg')
 background_surface = pygame.transform.scale(background_surface, (screen_width, screen_height))
 
 # Cria os objeto de texto Stats
