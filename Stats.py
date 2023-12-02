@@ -3,7 +3,8 @@ import pygame
 import os
 
 pygame.init()
-screen = pygame.display.set_mode((1043, 755))
+screen_width, screen_height = 1043, 755
+screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Fut Champions')
 clock = pygame.time.Clock()
 
@@ -16,10 +17,10 @@ main_font.set_bold(True)
 white_color = (255, 255, 255)
 black_color = (0, 0, 0)
 brown_color = (79, 45, 45)
-white_color = (255, 255, 255)
 
-# Imagem do fundo
-background_surface = pygame.image.load('Imagens/Login.jpg')
+# Carrega e redimensiona a imagem de fundo
+background_surface = pygame.image.load('Imagens/stats.png')
+background_surface = pygame.transform.scale(background_surface, (screen_width, screen_height))
 
 # Cria os objeto de texto Stats
 stats = main_font.render('STATS', True, black_color)
@@ -83,7 +84,7 @@ while True:
                 sys.exit()
 
     # Desenha a imagem de fundo
-    screen.blit(background_surface, (0, 0))
+    screen.blit(background_surface, (0, 30))
     
     # Desenha o retângulo superior com a borda preta
     screen.blit(top_rectangle, (0, 15))
