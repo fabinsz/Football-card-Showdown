@@ -8,9 +8,9 @@ pygame.display.set_caption('Fut Champions')
 clock = pygame.time.Clock()
 
 # Fonte
-main_font = pygame.font.Font('Fontes/Bahnschrift.ttf', 20)
+main_font = pygame.font.Font('Fontes/Bahnschrift.ttf', 15)
 other_font = pygame.font.Font('Fontes/Bahnschrift.ttf', 15)
-title_font_bold = pygame.font.Font('Fontes/Karla.ttf', 30)
+title_font_bold = pygame.font.Font('Fontes/Karla.ttf', 25)
 title_font_bold.set_bold(True)
 
 # Cores
@@ -20,12 +20,12 @@ brown_color = (73, 49, 49)
 white_color = (255, 255, 255)
 
 # Imagem da direita
-background_surface = pygame.image.load('Imagens/Login.jpeg')
+background_surface = pygame.image.load('Imagens/Login.jpg')
 
 # Botão da seta
 arrow = pygame.image.load('Imagens/Botão seta.png')
 arrow = pygame.transform.scale(arrow, (60, 60))
-arrow_rect = arrow.get_rect(topleft=(118, 540))
+arrow_rect = arrow.get_rect(topleft=(118, 560))
 
 # Criar o objeto retângulo
 rectangle = pygame.Surface((305, 755))
@@ -57,7 +57,7 @@ button_criar_conta, button_rect_criar_conta = create_button(
 input_box_width = 236
 input_box_height = 46
 username_box = pygame.Rect(30, 280, input_box_width, input_box_height)
-password_box = pygame.Rect(30, 420, input_box_width, input_box_height)
+password_box = pygame.Rect(30, 390, input_box_width, input_box_height)
 
 while True:
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -74,7 +74,7 @@ while True:
                 sys.exit()
 
     # Desenha a imagem de fundo
-    screen.blit(background_surface, (300, 0))
+    screen.blit(background_surface, (100, 0))
 
     # Desenha o retângulo
     screen.blit(rectangle, (0, 0))
@@ -85,11 +85,11 @@ while True:
 
     # Posições de text2 no retângulo
     text_2 = text2.get_rect()
-    text_2.topleft = (30, 240)
+    text_2.topleft = (30, 250)
 
     # Posições de text3 no retângulo
     text_3 = text3.get_rect()
-    text_3.topleft = (30, 380)
+    text_3.topleft = (30, 360)
 
     # Desenha os textos na tela
     screen.blit(text1, text_1)

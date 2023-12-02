@@ -9,7 +9,7 @@ pygame.display.set_caption('Fut Champions')
 clock = pygame.time.Clock()
 
 # Imagem da direita
-background_surface = pygame.image.load('Imagens/Menu principal.jpeg')
+background_surface = pygame.image.load('Imagens/Menu principal.jpg')
 
 # Carrega as fontes
 gamename_font = pygame.font.Font('Fontes/FRAHV.TTF', 35)
@@ -95,7 +95,7 @@ while True:
     button_rect4_color = black_color if not button_rect4.collidepoint(mouse_x, mouse_y) else red_color
 
     # Desenha a imagem de fundo
-    screen.blit(background_surface, (300, 0))
+    screen.blit(background_surface, (140, 0))
 
     # Desenha o retângulo marrom
     screen.blit(rectangle, (0, 0))

@@ -8,9 +8,9 @@ pygame.display.set_caption('Fut Champions')
 clock = pygame.time.Clock()
 
 # Fonte
-main_font = pygame.font.Font('Fontes/Bahnschrift.ttf', 20)
+main_font = pygame.font.Font('Fontes/Bahnschrift.ttf', 15)
 other_font = pygame.font.Font('Fontes/Bahnschrift.ttf', 15)
-title_font_bold = pygame.font.Font('Fontes/Karla.ttf', 30)
+title_font_bold = pygame.font.Font('Fontes/Karla.ttf', 25)
 title_font_bold.set_bold(True)
 
 # Cores
@@ -20,12 +20,12 @@ brown_color = (73, 49, 49)
 white_color = (255, 255, 255)
 
 # Imagem da direita
-background_surface = pygame.image.load('Imagens/Cadastro.jpeg')
+background_surface = pygame.image.load('Imagens/Cadastro.jpg')
 
 # Botão da seta
 arrow = pygame.image.load('Imagens/Botão seta.png')
 arrow = pygame.transform.scale(arrow, (60, 60))
-arrow_rect = arrow.get_rect(topleft=(118, 540))
+arrow_rect = arrow.get_rect(topleft=(118, 560))
 
 # Criar o objeto retângulo
 rectangle = pygame.Surface((305, 755))
@@ -77,7 +77,7 @@ while True:
                 sys.exit()
 
     # Desenha a imagem de fundo
-    screen.blit(background_surface, (150, -80))
+    screen.blit(background_surface, (100, -50))
 
     # Desenha o retângulo
     screen.blit(rectangle, (0, 0))
@@ -100,7 +100,7 @@ while True:
     
     # Posições de text5 no retângulo
     text_5 = text5.get_rect()
-    text_5.topleft = (50, 660)
+    text_5.topleft = (75, 660)
 
     # Desenha os textos na tela
     screen.blit(text1, text_1)
