@@ -83,6 +83,13 @@ while True:
                 editordeck_script = os.path.join(os.path.dirname(__file__), "EditorDeck.py")
                 os.system(f"python {editordeck_script}")
                 sys.exit()
+        
+        #Estrutura para clicar em "Editar Deck"
+            elif button_rect2.collidepoint(mouse_x, mouse_y):
+                pygame.quit()
+                Stats_script = os.path.join(os.path.dirname(__file__), "Stats.py")
+                os.system(f"python {Stats_script}")
+                sys.exit()        
     
     # Obtém as coordenadas do mouse
     mouse_x, mouse_y = pygame.mouse.get_pos()

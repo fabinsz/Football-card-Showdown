@@ -25,6 +25,9 @@ YELLOW = (255, 255, 0)
 LIGHT_GRAY = (217, 217, 217)
 DARK_GRAY = (169, 169, 169)
 DARK_BLUE = (10, 16, 28)
+cor_vermelha = (255, 0, 0)
+cor = (53, 56, 80)
+
 
 
 # Configurar a tela
@@ -36,19 +39,40 @@ font = pygame.font.Font(caminho_fonte, 36)
 
 
 def criar_cartas_disponiveis():
-    cartas_disponiveis = [
-        Carta("Carta 1", 410, 50, BLACK, "teste teste"),  # Cor preta
-        Carta("Carta 2", 530, 50, (0, 0, 255), "teste teste!"),  # Cor azul
-        Carta("Carta 3", 650, 50, (255, 0, 0), "teste teste!!"),  # Cor vermelha
-        Carta("Carta 2", 530, 50, (0, 0, 255), "teste teste!"),  # Cor azul
-        Carta("Carta 3", 650, 50, (255, 0, 0), "teste teste!!"),  # Cor vermelha
-        Carta("Carta 1", 410, 50, BLACK, "teste teste"),  # Cor preta
-        Carta("Carta 2", 530, 50, (0, 0, 255), "teste teste!"),  # Cor azul
-        Carta("Carta 3", 650, 50, (255, 0, 0), "teste teste!!"),  # Cor vermelha
-        Carta("Carta 1", 410, 50, BLACK, "teste teste"),  # Cor preta
-        Carta("Carta 4", 770, 50, DARK_GRAY, "teste teste!!!"),  
-        Carta("Carta 4", 770, 50, DARK_GRAY, "teste teste!!!"),  
+    nomes_cartas = [
+        "Avanço 5",  "Avanço 10", "Avanço 15",
+        "Avanço 5", "Avanço 10", "Avanço 15", "Avanço 5", "Chute livre", "Chute livre", 
+        "Penalti", "Penalti", "Gol de ouro", "Goleiro", "Goleiro", "Goleiro", "Pressão",
+        "Pressão", "Pressão", "Lesão", "Lesão", "Meio campo", "Meio campo", "Torcida", "Torcida"
     ]
+
+    coordenadas_x = [330,  470, 600, 340, 480, 610, 350, 730, 740, 870, 880,  330, 450, 460, 470,
+                     590, 600, 610, 740, 750, 870, 880, 330, 340]
+    coordenadas_y = [20,  20, 20, 20, 20, 20, 20, 20, 20, 20, 20,  
+                     190, 190, 190, 190, 190, 190, 190, 190, 190, 190, 190,
+                     360, 360]
+    descricoes = ["Avance 5 passos em direção ao gol", "Avance 10 passos em direção ao gol", "Avance 15 passos em direção ao gol",
+                  "Avance 10 passos em direção ao gol", "Avance 15 passos em direção ao gol", "Avance 5 passos em direção ao gol",
+                  "Avance 10 passos em direção ao gol", "Avance 15 passos em direção ao gol", "Avance 5 passos em direção ao gol",
+                  "Ao ganhar na roleta, realiza um chute de 75 por cento de chance de gol ", "Ao ganhar na roleta, realiza um chute de 75 por cento de chance de gol ",
+                  "Ao ganhar na roleta, realiza um chute de 75 por cento de chance de gol ", "Ao ganhar na roleta, realiza um chute de 85 por cento de chance de gol",
+                  "Ao ganhar na roleta, realiza um chute de 85 por cento de chance de gol", "Ao ganhar na roleta, realiza um chute de 85 por cento de chance de gol",
+                  "Ao ganhar na roleta, descarta uma carta e faça um gol", "Ao oponente ganhar na roleta, diminui em 75 por cento a chance de gol inimigo",
+                  "Ao oponente ganhar na roleta, diminui em 75 por cento a chance de gol inimigo", "Ao oponente ganhar na roleta, diminui em 75 por cento a chance de gol inimigo",
+                  "Ao oponente ganhar na roleta, recua o mesmo em 25 passos", "Ao oponente ganhar na roleta, recua o mesmo em 25 passos", "Ao oponente ganhar na roleta, recua o mesmo em 25 passos",
+                  "Descarta uma carta do rival", "Descarta uma carta do rival", "A bola volta ao meio campo", "A bola volta ao meio campo", "Aumenta em 25 por cento a chance de gol por 2 rodadas",
+                  "Aumenta em 25 por cento a chance de gol por 2 rodadas"
+                   
+                  ] 
+    
+
+    cartas_disponiveis = []
+
+    for nome, x, y, descricao in zip(nomes_cartas, coordenadas_x, coordenadas_y, descricoes):
+        carta = Carta(nome, x, y, descricao,
+                      f'imagens/Cartas/{nome}.png', 110, 150)
+        cartas_disponiveis.append(carta)
+
     return cartas_disponiveis
 
 def desenhar_slots(screen, slots_vazios):
@@ -67,7 +91,7 @@ class Button:
         self.text_color = [255, 255, 255]
         self.mouse_was_pressed = False
         self.text_size = 30
-        self.text = "Salvar/Sair"
+        self.text = "Salvar/Voltar"
 
     def render(self):
         retangulo = pygame.Rect(self.left, self.top, self.length, self.height)
@@ -104,14 +128,14 @@ def main():
     
     # Crie uma lista para armazenar os slots vazios
     slots_vazios = [
-        (50, 580, 100, 150),  
-        (170, 580, 100, 150),
-        (290, 580, 100, 150),
-        (410, 580, 100, 150),
-        (530, 580, 100, 150),
-        (650, 580, 100, 150),
-        (770, 580, 100, 150),
-        (890, 580, 100, 150),
+        (50, 580, 110, 150),  
+        (170, 580, 110, 150),
+        (290, 580, 110, 150),
+        (410, 580, 110, 150),
+        (530, 580, 110, 150),
+        (650, 580, 110, 150),
+        (770, 580, 110, 150),
+        (890, 580, 110, 150),
         
     ]
     
@@ -148,7 +172,7 @@ def main():
                             carta_aumentada = CartaAumentada(carta_em_arrasto)
                             all_sprites.add(carta_aumentada)
                             
-                            descricao_carta.add(DescricaoCarta(carta_em_arrasto.descricao, 50, 350))
+                            descricao_carta.add(DescricaoCarta(carta_em_arrasto.descricao, 15, 350))
                             break
             
             elif event.type == pygame.MOUSEBUTTONUP:
@@ -187,10 +211,9 @@ def main():
                        carta_aumentada = None        
                     
                   
-                    # Desenhar os retângulos brancos usando um loop
                     for i, carta in enumerate(cartas_disponiveis):
-                      x = slot_start_x + i * slot_spacing
-                      pygame.draw.rect(screen, carta.cor, (x, slot_start_y, slot_width, slot_height))
+                         x = slot_start_x + i * slot_spacing
+                         screen.blit(carta.image, (x, slot_start_y))
 
             # Adicione esta parte para lidar com o efeito de brilho
             elif event.type == pygame.MOUSEMOTION:
@@ -206,7 +229,7 @@ def main():
                 deck_jogador.mostrar_cartas() 
 
         # Definir as propriedades dos retângulos brancos
-        slot_width, slot_height = 100, 150
+        slot_width, slot_height = 110, 150
         slot_spacing = 120
         slot_start_x = 50
         slot_start_y = 580
@@ -216,7 +239,7 @@ def main():
         
         
         # Desenhar na tela
-        screen.fill(DARK_BLUE)
+        screen.fill(cor)
         
         desenhar_slots(screen, slots_vazios)  # Desenha os slots antes das cartas
         

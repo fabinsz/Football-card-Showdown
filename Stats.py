@@ -26,27 +26,28 @@ background_surface = pygame.transform.scale(background_surface, (screen_width, s
 stats = main_font.render('STATS', True, black_color)
 
 # Cria os objeto de texto central
-victory = main_font2.render('Vitórias -------------------------', True, white_color)
-defeats = main_font2.render('Derrotas ------------------------', True, white_color)
-goals_scored = main_font2.render('Gols marcados ------------------', True, white_color)
-goals_conceded = main_font2.render('Gols sofridos -------------------', True, white_color)
-total_matches = main_font2.render('Total de partidas -----------------', True, white_color)
+victory = main_font2.render('Vitórias -------------------------000', True, white_color)
+defeats = main_font2.render('Derrotas ------------------------000', True, white_color)
+goals_scored = main_font2.render('Gols marcados ------------------000', True, white_color)
+goals_conceded = main_font2.render('Gols sofridos --------------------000', True, white_color)
+total_matches = main_font2.render('Total de partidas -----------------000', True, white_color)
 
 # Criar o objeto retângulo superior
 top_rectangle = pygame.Surface((1043, 64))
 top_rectangle.fill(white_color)
 
 # Adicionar borda preta ao retângulo superior
-pygame.draw.rect(top_rectangle, black_color, top_rectangle.get_rect(), 2)
+pygame.draw.rect(top_rectangle, black_color, top_rectangle.get_rect(), 1)
 
 # Criar o objeto retângulo central
 center_rectangle = pygame.Surface((488, 336))
 center_rectangle.fill(brown_color)
 
+
 # Criar um retângulo para a borda preta
-border_rect = pygame.Surface((center_rectangle.get_width() + 10, center_rectangle.get_height() + 10))
+border_rect = pygame.Surface((center_rectangle.get_width() + 6.5, center_rectangle.get_height() + 6.5))
 border_rect.fill(black_color)
-border_rect.blit(center_rectangle, (5, 5))
+border_rect.blit(center_rectangle, (3.9, 3.9))
 
 # Função para criar botão
 def create_button(text, font, text_color, button_color, btn_width, btn_height, position):
@@ -67,7 +68,7 @@ center_x = screen.get_width() // 2
 
 # Cria o botão "Sair"
 button_exit, button_rect_exit = create_button(
-    'Sair', main_font2, black_color, white_color,
+    'Voltar', main_font2, black_color, white_color,
     100, 50, (center_x, 650)
 )
 
@@ -79,7 +80,7 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if button_rect_exit.collidepoint(event.pos):
                 pygame.quit()
-                login_script = os.path.join(os.path.dirname(__file__), "Login.py")
+                login_script = os.path.join(os.path.dirname(__file__), "Menu_inicial.py")
                 os.system(f"python {login_script}")
                 sys.exit()
 
