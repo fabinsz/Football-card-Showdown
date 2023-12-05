@@ -71,12 +71,26 @@ confirm_password_text = ''
 # Função para adicionar texto aos campos
 def draw_text_in_box(surface, text, color, rect, font):
     text_surface = font.render(text, True, color)
-    text_rect = text_surface.get_rect(topleft=(rect.x + 5, rect.y + 5))
+    # Ajuste o deslocamento vertical aqui (aumente o valor de 5 para mover o texto para baixo)
+    text_rect = text_surface.get_rect(topleft=(rect.x + 5, rect.y + 15))  # Ajuste o valor de 15 para mover o texto
+
     if text_rect.width > rect.width - 10:
         text = text[:len(text)-1]
         text_surface = font.render(text, True, color)
-        text_rect = text_surface.get_rect(topleft=(rect.x + 5, rect.y + 5))
+        text_rect = text_surface.get_rect(topleft=(rect.x + 5, rect.y + 15))  # Ajuste o valor de 15 para mover o texto
+
     surface.blit(text_surface, text_rect)
+# Posições de text3 no retângulo (Senha)
+text_3 = text3.get_rect()
+text_3.topleft = (30, 320)  # Ajuste o valor vertical conforme necessário
+
+# Posições de text4 no retângulo (Confirmar senha)
+text_4 = text4.get_rect()
+text_4.topleft = (30, 420)  # Ajuste o valor vertical conforme necessário
+
+# Variável para controle do cadastro
+cadastro_sucesso = False
+
 
 while True:
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -103,6 +117,7 @@ while True:
                             file.write(player_data)
 
                         print("Dados do jogador salvos com sucesso!")
+                        cadastro_sucesso = True  # Altera para True após o cadastro
                     else:
                         print("Senhas não coincidem!")
                 else:
@@ -195,6 +210,14 @@ while True:
     draw_text_in_box(screen, username_text, white_color, username_box, main_font)
     draw_text_in_box(screen, '*' * len(password_text), white_color, password_box, main_font)  # Para senha, exibe asteriscos
     draw_text_in_box(screen, '*' * len(confirm_password_text), white_color, confirm_password_box, main_font)  # Confirmar senha também exibe asteriscos
+
+# Se o cadastro foi bem-sucedido, ao pressionar o botão de seta, vá para a página de login
+    if cadastro_sucesso and arrow_hovered:
+        pygame.quit()
+        login_script = os.path.join(os.path.dirname(__file__), "Login.py")
+        os.system(f"python {login_script}")
+        sys.exit()
+
 
     pygame.display.update()
     clock.tick(60)
