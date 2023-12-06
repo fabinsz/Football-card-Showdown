@@ -5,7 +5,7 @@ from Classes.carta import Carta
 from Classes.deck import Deck
 from Classes.carta_ampliada import CartaAumentada
 from Classes.Descriçao import DescricaoCarta
-
+from Classes.Button import Button
 
 nome_fonte = "BAHNSCHRIFT.TTF"
 caminho_fonte = os.path.join(os.path.dirname(__file__), "Fontes", nome_fonte)
@@ -28,7 +28,9 @@ DARK_BLUE = (10, 16, 28)
 cor_vermelha = (255, 0, 0)
 cor = (53, 56, 80)
 
-
+# Criar o objeto retângulo
+rectangle = pygame.Surface((305, 755))
+rectangle.fill(DARK_RED)
 
 # Configurar a tela
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -79,42 +81,11 @@ def desenhar_slots(screen, slots_vazios):
     for slot in slots_vazios:
         pygame.draw.rect(screen, LIGHT_GRAY, slot)
 
-class Button:
-    def __init__(self):
-        self.left = 40
-        self.top = 460
-        self.length = 232
-        self.height = 41
-        self.normal_color = [73, 49, 49]
-        self.hover_color = [10, 16, 28]
-        self.color = self.normal_color
-        self.text_color = [255, 255, 255]
-        self.mouse_was_pressed = False
-        self.text_size = 30
-        self.text = "Salvar/Voltar"
 
-    def render(self):
-        retangulo = pygame.Rect(self.left, self.top, self.length, self.height)
-        mouse_got_pressed = pygame.mouse.get_pressed()[0]
-        self.mouse_was_clicked = mouse_got_pressed and not self.mouse_was_pressed
-
-        self.mouse_was_pressed = mouse_got_pressed
-        mouse_left, mouse_top = pygame.mouse.get_pos()
-
-        is_mouse_collision = retangulo.collidepoint(mouse_left, mouse_top)
-        self.color = self.hover_color if is_mouse_collision else self.normal_color
-
-        font = pygame.font.Font(None, self.text_size)
-        text_surface = font.render(self.text, True, self.text_color)
-        text_rect = text_surface.get_rect(center=(self.left + self.length / 2, self.top + self.height / 2))
-
-        pygame.draw.rect(screen, self.color, retangulo)
-        screen.blit(text_surface, text_rect)
-
-    def get_clicked(self):
-        return self.mouse_was_clicked
 
 button = Button()
+
+
 
 # Função principal
 def main():
@@ -161,7 +132,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:  
                 if event.button == 1:  # Botão esquerdo do mouse pressionado
                     for carta in all_sprites:
                         if carta.rect.collidepoint(pygame.mouse.get_pos()):
@@ -175,6 +146,8 @@ def main():
                             descricao_carta.add(DescricaoCarta(carta_em_arrasto.descricao, 15, 350))
                             break
             
+            
+                
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1 and carta_em_arrasto:
                     carta_em_arrasto.sendo_arrastada = False
@@ -227,7 +200,9 @@ def main():
             # Verifique se a tecla "D" foi pressionada
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_d:
                 deck_jogador.mostrar_cartas() 
-
+   
+        
+        
         # Definir as propriedades dos retângulos brancos
         slot_width, slot_height = 110, 150
         slot_spacing = 120
@@ -264,8 +239,15 @@ def main():
         # Desenhar os slots após as cartas
         desenhar_slots(screen, slots_vazios) 
          
+        
         button.render()
         
+        if button.handle_event(event):
+            pygame.quit()
+            menu_script = os.path.join(os.path.dirname(__file__), "Menu_inicial.py")
+            os.system(f"python {menu_script}")
+            sys.exit()
+
         all_sprites.draw(screen)      
         
         
@@ -275,7 +257,8 @@ def main():
 
         # Define o FPS
         clock.tick(FPS)
-               
+     
+    
     # Encerrar o Pygame
     pygame.quit()
     sys.exit() 
