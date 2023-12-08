@@ -80,6 +80,7 @@ def fazer_login(username, password):
                 return True
     return False
 
+
 # Cria o botão "Crie sua conta"
 button_criar_conta, button_rect_criar_conta = create_button(
     'Crie sua conta', main_font, black_color, gray_color,
@@ -91,6 +92,8 @@ input_box_width = 236
 input_box_height = 46
 username_box = pygame.Rect(30, 280, input_box_width, input_box_height)
 password_box = pygame.Rect(30, 390, input_box_width, input_box_height)
+
+login_sucesso = False
 
 while True:
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -108,6 +111,7 @@ while True:
             elif arrow_rect.collidepoint(event.pos):  # Verifica o clique no botão da seta
                 if fazer_login(username_text, password_text):  # Verifica o login ao clicar na seta
                     print("Login bem-sucedido!")
+                    login_sucesso = True
                 else:
                     print("Usuário ou senha incorretos.")
                     incorrect_text = main_font.render('Usuário ou senha incorretos.', True, (255, 0, 0))  # Cor vermelha
@@ -200,6 +204,12 @@ while True:
 
     # Desenha o botão seta
     screen.blit(arrow, arrow_rect.topleft)
+
+    if login_sucesso == True:
+        pygame.quit()
+        menu_script = os.path.join(os.path.dirname(__file__), "Menu_inicial.py")
+        os.system(f"python {menu_script}")
+        sys.exit()
 
     pygame.display.update()
     clock.tick(60)
