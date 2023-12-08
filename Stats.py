@@ -17,6 +17,7 @@ main_font.set_bold(True)
 white_color = (255, 255, 255)
 black_color = (0, 0, 0)
 brown_color = (79, 45, 45)
+red_color = (251, 7, 7)
 
 # Carrega e redimensiona a imagem de fundo
 background_surface = pygame.image.load('Imagens/campinho tatico.jpg')
@@ -73,6 +74,9 @@ button_exit, button_rect_exit = create_button(
 )
 
 while True:
+    # Obtém as coordenadas do mouse
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -83,7 +87,15 @@ while True:
                 login_script = os.path.join(os.path.dirname(__file__), "Menu_inicial.py")
                 os.system(f"python {login_script}")
                 sys.exit()
-
+                
+    # Verifica se o mouse está sobre o botão "Sair"
+    if button_rect_exit.collidepoint(mouse_x, mouse_y):
+    # Altera a cor da borda para vermelho quando o mouse está sobre o botão
+        pygame.draw.rect(button_exit, red_color, button_exit.get_rect(), 2)
+    else:
+        # Mantém a cor preta da borda quando o mouse não está sobre o botão
+        pygame.draw.rect(button_exit, black_color, button_exit.get_rect(), 2)            
+    
     # Desenha a imagem de fundo
     screen.blit(background_surface, (0, 30))
     
@@ -124,7 +136,7 @@ while True:
     # Desenha o texto Stats na tela
     screen.blit(stats, Stats_rect)
     
-    # Desenha o botão "Sair"
+    # Desenha o botão "Sair" 
     screen.blit(button_exit, button_rect_exit)
 
     pygame.display.update()

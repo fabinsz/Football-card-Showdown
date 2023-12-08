@@ -73,8 +73,6 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if button_rect4.collidepoint(mouse_x, mouse_y):
                 pygame.quit()
-                login_script = os.path.join(os.path.dirname(__file__), "Login.py")
-                os.system(f"python {login_script}")
                 sys.exit()
                 
         #Estrutura para clicar em "Editar Deck"
@@ -84,7 +82,7 @@ while True:
                 os.system(f"python {editordeck_script}")
                 sys.exit()
         
-        #Estrutura para clicar em "Editar Deck"
+        #Estrutura para clicar em "Stats"
             elif button_rect2.collidepoint(mouse_x, mouse_y):
                 pygame.quit()
                 Stats_script = os.path.join(os.path.dirname(__file__), "Stats.py")
