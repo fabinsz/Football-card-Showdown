@@ -87,7 +87,14 @@ while True:
                 pygame.quit()
                 Stats_script = os.path.join(os.path.dirname(__file__), "Stats.py")
                 os.system(f"python {Stats_script}")
-                sys.exit()        
+                sys.exit()      
+        
+        #Estrutura para clicar em "Jogar"
+            elif button_rect1.collidepoint(mouse_x, mouse_y):
+                pygame.quit()
+                Stats_script = os.path.join(os.path.dirname(__file__), "Game.py")
+                os.system(f"python {Stats_script}")
+                sys.exit()           
     
     # Obtém as coordenadas do mouse
     mouse_x, mouse_y = pygame.mouse.get_pos()

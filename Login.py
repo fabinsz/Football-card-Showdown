@@ -1,6 +1,7 @@
 import sys
 import pygame
 import os
+from EditorDeck import carregar_deck_usuario
 
 pygame.init()
 screen = pygame.display.set_mode((1043, 755))

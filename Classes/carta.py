@@ -20,7 +20,13 @@ class Carta(pygame.sprite.Sprite):
         self.sendo_arrastada = False
         self.em_slot = False
         self.slot_rect = pygame.Rect(0, 0, 0, 0)
-
+        self.saindo_deck = False
+     
+     # Adicione esse método para iniciar a animação de saída do deck
+    def animacao_sair_deck(self, posicao_final):
+        self.saindo_deck = True
+        self.posicao_final = posicao_final
+        
     def update(self):
         if self.brilho:
             # Crie uma nova imagem com o tamanho original
@@ -45,3 +51,9 @@ class Carta(pygame.sprite.Sprite):
         if self.em_slot and not self.sendo_arrastada:
             if isinstance(self.slot_rect, tuple):
                 self.slot_rect = pygame.Rect(self.slot_rect)
+         
+        if self.saindo_deck:
+            velocidade_animacao = 5  # Ajuste conforme necessário
+            self.rect.x += velocidade_animacao
+            if self.rect.x >= self.posicao_final[0]:
+                self.saindo_deck = False        

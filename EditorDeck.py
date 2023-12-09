@@ -1,6 +1,8 @@
 import pygame
 import sys
 import os
+import base64
+import json
 from Classes.carta import Carta
 from Classes.deck import Deck
 from Classes.carta_ampliada import CartaAumentada
@@ -36,9 +38,11 @@ rectangle.fill(DARK_RED)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Fut Champions")
 
+mensagem_deck_incompleto = "O deck não está completo. Adicione 8 cartas."
+fonte_mensagem = pygame.font.Font(caminho_fonte, 12)
+cor_mensagem = cor_vermelha
 
 font = pygame.font.Font(caminho_fonte, 36)
-
 
 def criar_cartas_disponiveis():
     nomes_cartas = [
@@ -85,7 +89,41 @@ def desenhar_slots(screen, slots_vazios):
 
 button = Button()
 
+def salvar_deck_usuario(deck, nome_arquivo):
+    with open(nome_arquivo, 'w') as file:
+        # Serializa as informações do deck para formato JSON
+        deck_info = {
+            "cartas": [
+                {"nome": carta.nome, "descricao": carta.descricao, "imagem": carta_imagem_para_string(carta.image)}
+                for carta in deck.cartas
+            ]
+        }
+        json.dump(deck_info, file)
 
+def carta_imagem_para_string(image):
+    # Converte a imagem da carta em uma string base64
+    _, buffer = pygame.image.tostring(image, 'RGBA'), pygame.image.tostring(image, 'RGBA')
+    return base64.b64encode(buffer).decode('utf-8')
+                
+def carregar_deck_usuario(nome_arquivo):
+    try:
+        with open(nome_arquivo, 'r') as file:
+            # Desserializa as informações do deck a partir do JSON
+            deck_info = json.load(file)
+            nomes_cartas = [carta_info["nome"] for carta_info in deck_info["cartas"]]
+            return nomes_cartas
+    except FileNotFoundError:
+        # Lidar com a situação em que o arquivo não existe
+        return []
+    
+def verificar_deck_completo(deck):
+    global mensagem_deck_incompleto
+    if len(deck.cartas) == 8:
+        mensagem_deck_incompleto = ""
+        return True
+    else:
+        mensagem_deck_incompleto = "O deck não está completo. Adicione 8 cartas."
+        return False
 
 # Função principal
 def main():
@@ -239,17 +277,31 @@ def main():
         # Desenhar os slots após as cartas
         desenhar_slots(screen, slots_vazios) 
          
+        # Verifica se o deck está completo para habilitar ou desabilitar o botão
+        deck_completo = verificar_deck_completo(deck_jogador)
+
         
         button.render()
         
         if button.handle_event(event):
+           if deck_completo:
             pygame.quit()
             menu_script = os.path.join(os.path.dirname(__file__), "Menu_inicial.py")
+        
+             # Ao finalizar a edição do deck
+            salvar_deck_usuario(deck_jogador, 'deck_jogador_info.json')
+
+            # Pode ser necessário ajustar o caminho do script do menu inicial
             os.system(f"python {menu_script}")
             sys.exit()
 
+
         all_sprites.draw(screen)      
         
+
+        if not deck_completo:
+         mensagem_surface = fonte_mensagem.render(mensagem_deck_incompleto, True, cor_mensagem)
+         screen.blit(mensagem_surface, (40, 510))
         
         # Atualizar a tela
         pygame.display.flip()
