@@ -1,4 +1,4 @@
-import Menu_inicial
+import Login
 
 if __name__ == "__main__":
-    Menu_inicial.run()
+    Login.run()

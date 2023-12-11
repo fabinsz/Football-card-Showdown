@@ -12,7 +12,6 @@ class Deck:
             carta.em_slot = False  # Indicamos que a carta não está mais em um slot
         else:
             self.deck_cheio = True
-            print("Seu deck está cheio! Não é possível adicionar mais cartas.")
             # Adicione a cor vermelha quando o deck estiver cheio
 
     def mostrar_cartas(self):
