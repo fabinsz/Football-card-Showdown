@@ -12,9 +12,16 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Fut Champions')
 clock = pygame.time.Clock()
 
+mensage_font = pygame.font.Font('Fontes/FRAHV.TTF', 24)
+mensagem_turno = mensage_font.render('É a sua vez!', True, (255, 255, 255))
+
 # Carrega e redimensiona a imagem de fundo
 background_surface = pygame.image.load('Imagens/Jogo/fundo_game.jpg')
 background_surface = pygame.transform.scale(background_surface, (screen_width, screen_height))
+
+Bola = pygame.image.load('Imagens/Jogo/bola.png')
+Bola = pygame.transform.scale(Bola, (40, 40))
+ 
 
 verso_image = pygame.image.load('Imagens/Cartas/Verso.png')
 verso_image =  pygame.transform.scale(verso_image, (110, 150))
@@ -43,7 +50,7 @@ for indice in indices_cartas_aleatorias:
 cartas_na_mao_inimigo = []
 
 # Adicionar 3 cartas aleatórias do deck do inimigo à mão do inimigo
-indices_cartas_mao_aleatorias = random.sample(range(len(deck_inimigo.cartas)), 3)
+indices_cartas_mao_aleatorias = random.sample(range(len(deck_inimigo.cartas)), 4)
 
 for indice in indices_cartas_mao_aleatorias:
     carta_mao_aleatoria = deck_inimigo.cartas[indice]
@@ -93,6 +100,18 @@ tempo_espera_bot_fixo = 3000
 contador_turnos = 0
 contador_turnos2 = 0
 
+posicao_bola = 480
+limite_minimo = 130
+limite_maximo = 830
+
+def arredondar_percentual(valor):
+    if valor % 10 >= 3 and valor % 10 <= 7:
+        return (valor // 10) * 10 + 5
+    else:
+        return (valor // 10) * 10
+
+
+                
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -102,109 +121,194 @@ while True:
         elif event.type == pygame.MOUSEBUTTONDOWN:
            if turno_jogador: 
             
-            
+             
             for carta in cartas_na_mao:
                 if carta.rect.collidepoint(event.pos):
                     # Verifica se o nome da carta está na lista permitida
-                    if carta.nome in ['Avanço 5', 'Avanço 10', 'Avanço 15', 'Meio campo', 'Torcida', 'Lesão']:
-                        # Adiciona a carta clicada ao deck do jogador
+                    if carta.nome in ['Avanço 5']:
                         cartas_slot_c.append(carta)
-                        # Remove a carta da mão do jogador
                         cartas_na_mao.remove(carta)
-                        # Define uma nova posição para a carta clicada
-                        nova_posicao_x = 850  # Defina a nova posição X conforme necessário
-                        nova_posicao_y = 70  # Defina a nova posição Y conforme necessário
+                        nova_posicao_x = 850  
+                        nova_posicao_y = 70  
                         carta.rect.topleft = (nova_posicao_x, nova_posicao_y)
-                        contador_turnos2 += 1
+                        nova_posicao = posicao_bola + 48
+                        posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao))
+                        
+                    
+                    elif carta.nome in ['Avanço 10']:
+                        cartas_slot_c.append(carta)
+                        cartas_na_mao.remove(carta)
+                        nova_posicao_x = 850  
+                        nova_posicao_y = 70  
+                        carta.rect.topleft = (nova_posicao_x, nova_posicao_y)
+                        nova_posicao = posicao_bola + 96
+                        posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao))
+                       
+                    
+                    elif carta.nome in ['Avanço 15']:
+                        cartas_slot_c.append(carta)
+                        cartas_na_mao.remove(carta)
+                        nova_posicao_x = 850  
+                        nova_posicao_y = 70  
+                        carta.rect.topleft = (nova_posicao_x, nova_posicao_y)
+                        nova_posicao = posicao_bola + 144
+                        posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao))
+                        
+                    
+                                            
+                    elif carta.nome in ['Meio campo']:
+                        cartas_slot_c.append(carta)
+                        cartas_na_mao.remove(carta)
+                        nova_posicao_x = 850  
+                        nova_posicao_y = 70  
+                        carta.rect.topleft = (nova_posicao_x, nova_posicao_y)
+                        posicao_bola = 480
+                              
+                    
+                    elif carta.nome in ['Lesão']:
+                        cartas_slot_c.append(carta)
+                        cartas_na_mao.remove(carta)                       
+                        nova_posicao_x = 850  
+                        nova_posicao_y = 70  
+                        carta.rect.topleft = (nova_posicao_x, nova_posicao_y)
+                        if cartas_na_mao_inimigo:
+                                carta_removida = random.choice(cartas_na_mao_inimigo)
+                                cartas_na_mao_inimigo.remove(carta_removida)
+                    
+                    elif carta.nome in ['Torcida']:
+                        cartas_slot_c.append(carta)
+                        cartas_na_mao.remove(carta)                       
+                        nova_posicao_x = 850  
+                        nova_posicao_y = 70  
+                        carta.rect.topleft = (nova_posicao_x, nova_posicao_y)
+   
                         
                     elif carta.nome in ['Chute livre', 'Penalti', 'Gol de ouro']:
-                        # Adiciona a carta clicada ao deck do jogador
                         cartas_slot_a.append(carta)
-                        # Remove a carta da mão do jogador
                         cartas_na_mao.remove(carta)
-                        # Define uma nova posição para a carta clicada
-                        nova_posicao_x = 280  # Defina a nova posição X conforme necessário
-                        nova_posicao_y = 217 # Defina a nova posição Y conforme necessário
+                        nova_posicao_x = 280  
+                        nova_posicao_y = 217 
                         carta.rect.topleft = (nova_posicao_x, nova_posicao_y)  
-                        contador_turnos2 += 1
+                        
                         
                     
                     elif carta.nome in ['Goleiro', 'Pressão']:
-                        # Adiciona a carta clicada ao deck do jogador
                         cartas_slot_b.append(carta)
-                        # Remove a carta da mão do jogador
                         cartas_na_mao.remove(carta)
-                        # Define uma nova posição para a carta clicada
-                        nova_posicao_x = 600  # Defina a nova posição X conforme necessário
-                        nova_posicao_y = 217 # Defina a nova posição Y conforme necessário
+                        nova_posicao_x = 600  
+                        nova_posicao_y = 217 
                         carta.rect.topleft = (nova_posicao_x, nova_posicao_y) 
-                        contador_turnos2 += 1
+                        
                     
                     turno_jogador = False
+                    contador_turnos += 1 
                     
 
-        if not turno_jogador and pygame.time.get_ticks() - tempo_espera_bot>= tempo_espera_bot_fixo:
-                        carta_bot = escolher_carta_bot(cartas_na_mao_inimigo)  
-                        if carta_bot:
-                            if carta_bot.nome in ['Chute livre', 'Penalti', 'Gol de ouro']:
-                                # Adiciona a carta do bot ao deck do jogador
-                                cartas_slot_b.append(carta_bot)
-                                # Remove a carta da mão do bot
-                                cartas_na_mao_inimigo.remove(carta_bot)
-                                # Define uma nova posição para a carta do bot
-                                nova_posicao_x_bot = 280  # Defina a nova posição X conforme necessário
-                                nova_posicao_y_bot = 217  # Defina a nova posição Y conforme necessário
-                                carta_bot.rect.topleft = (nova_posicao_x_bot, nova_posicao_y_bot)
-                                contador_turnos += 1 
+    if not turno_jogador and pygame.time.get_ticks() - tempo_espera_bot>= tempo_espera_bot_fixo:
+        carta_bot = escolher_carta_bot(cartas_na_mao_inimigo)  
+        if carta_bot:
+            if carta_bot.nome in ['Chute livre', 'Penalti', 'Gol de ouro']:
+                cartas_slot_b.append(carta_bot)
+                cartas_na_mao_inimigo.remove(carta_bot)
+                nova_posicao_x_bot = 280  
+                nova_posicao_y_bot = 217 
+                carta_bot.rect.topleft = (nova_posicao_x_bot, nova_posicao_y_bot)
                                 
-                                
-
-                            elif carta_bot.nome in ['Avanço 5', 'Avanço 10', 'Avanço 15', 'Meio campo', 'Torcida', 'Lesão']:
-                                # Adiciona a carta do bot ao deck do jogador
-                                cartas_slot_c.append(carta_bot)
-                                # Remove a carta da mão do bot
-                                cartas_na_mao_inimigo.remove(carta_bot)
-                                # Define uma nova posição para a carta do bot
-                                nova_posicao_x_bot = 850  # Defina a nova posição X conforme necessário
-                                nova_posicao_y_bot = 70  # Defina a nova posição Y conforme necessário
-                                carta_bot.rect.topleft = (nova_posicao_x_bot, nova_posicao_y_bot)
-                                contador_turnos += 1 
-                                
-                                
-
-                            elif carta_bot.nome in ['Goleiro', 'Pressão']:
-                                # Adiciona a carta do bot ao deck do jogador
-                                cartas_slot_a.append(carta_bot)
-                                # Remove a carta da mão do bot
-                                cartas_na_mao_inimigo.remove(carta_bot)
-                                # Define uma nova posição para a carta do bot
-                                nova_posicao_x_bot = 600  # Defina a nova posição X conforme necessário
-                                nova_posicao_y_bot = 217  # Defina a nova posição Y conforme necessário
-                                carta_bot.rect.topleft = (nova_posicao_x_bot, nova_posicao_y_bot)
-                                contador_turnos += 1 
+            elif carta_bot.nome in ['Avanço 5']:
+                cartas_slot_c.append(carta_bot)
+                cartas_na_mao_inimigo.remove(carta_bot)
+                nova_posicao_x_bot = 850  
+                nova_posicao_y_bot = 70  
+                carta_bot.rect.topleft = (nova_posicao_x_bot, nova_posicao_y_bot)
+                nova_posicao1 = posicao_bola - 48
+                posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao1))
+            
+            elif carta_bot.nome in ['Avanço 10']:
+                cartas_slot_c.append(carta_bot)
+                cartas_na_mao_inimigo.remove(carta_bot)
+                nova_posicao_x_bot = 850  
+                nova_posicao_y_bot = 70  
+                carta_bot.rect.topleft = (nova_posicao_x_bot, nova_posicao_y_bot)
+                nova_posicao1 = posicao_bola - 96 
+                posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao1)) 
+            
+            elif carta_bot.nome in [ 'Avanço 15']:
+                cartas_slot_c.append(carta_bot)
+                cartas_na_mao_inimigo.remove(carta_bot)
+                nova_posicao_x_bot = 850  
+                nova_posicao_y_bot = 70  
+                carta_bot.rect.topleft = (nova_posicao_x_bot, nova_posicao_y_bot)
+                nova_posicao1 = posicao_bola - 144
+                posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao1))  
+            
+            elif carta_bot.nome in ['Meio campo']:
+                cartas_slot_c.append(carta_bot)
+                cartas_na_mao_inimigo.remove(carta_bot)
+                nova_posicao_x_bot = 850  
+                nova_posicao_y_bot = 70  
+                carta_bot.rect.topleft = (nova_posicao_x_bot, nova_posicao_y_bot)
+                posicao_bola = 480   
+                
+            elif carta_bot.nome in ['Lesão']:
+                cartas_slot_c.append(carta_bot)
+                cartas_na_mao_inimigo.remove(carta_bot)
+                nova_posicao_x_bot = 850  
+                nova_posicao_y_bot = 70  
+                carta_bot.rect.topleft = (nova_posicao_x_bot, nova_posicao_y_bot)
+                if cartas_na_mao:
+                    carta_removida = random.choice(cartas_na_mao)
+                    cartas_na_mao.remove(carta_removida) 
+            
+            elif carta_bot.nome in ['Torcida']:
+                cartas_slot_c.append(carta_bot)
+                cartas_na_mao_inimigo.remove(carta_bot)
+                nova_posicao_x_bot = 850  
+                nova_posicao_y_bot = 70  
+                carta_bot.rect.topleft = (nova_posicao_x_bot, nova_posicao_y_bot)
+                                           
                             
-                            turno_jogador = True
-                            tempo_espera_bot = pygame.time.get_ticks()  # Atualiza o tempo de espera do bot
+            elif carta_bot.nome in ['Goleiro', 'Pressão']:
+                cartas_slot_a.append(carta_bot)
+                cartas_na_mao_inimigo.remove(carta_bot)
+                nova_posicao_x_bot = 600  
+                nova_posicao_y_bot = 217  
+                carta_bot.rect.topleft = (nova_posicao_x_bot, nova_posicao_y_bot)
+                                
+        contador_turnos += 1 
                             
+        if contador_turnos >= 1 and not turno_jogador:
+            if len(deck_inimigo.cartas) > 0:
+             # Adiciona uma carta do deck à mão do bot
+             carta_comprada_bot = deck_inimigo.cartas.pop(0)
+             cartas_na_mao_inimigo.append(carta_comprada_bot)
+                           
+        turno_jogador = True
+        tempo_espera_bot = pygame.time.get_ticks()  # Atualiza o tempo de espera do bot
+         
+         # Calcular a porcentagem de conclusão do trajeto
+        percentual_conclusao = arredondar_percentual(((posicao_bola - limite_minimo) / (limite_maximo - limite_minimo)) * 100)
+        
+        # Realizar a "roleta"
+        chance_vitoria_jogador = 100 - percentual_conclusao
+        chance_vitoria_bot = percentual_conclusao
+
+        # Realizar a "roleta"
+        vencedor = "jogador" if random.randint(1, 100) <= chance_vitoria_jogador else "bot"
+
+        # Exibir o resultado
+        print(f"Porcentagem de conclusão: {percentual_conclusao}%")
+        print(f"Chances de vitória: Jogador = {chance_vitoria_jogador}%, Bot = {chance_vitoria_bot}%")
+        print(f"Vencedor: {vencedor}")
+        
+        
         
     # Lógica de compra de cartas apenas no turno do jogador
-    if contador_turnos == 1 and turno_jogador:
-        if len(cartas_no_deck)  :
+    if contador_turnos >= 1 and turno_jogador:
+        if len(cartas_no_deck) > 0  :
             # Adiciona uma carta do deck à mão do jogador
             carta_comprada = cartas_no_deck.pop(0)
             cartas_na_mao.append(carta_comprada)
                
-
-    
-    # Lógica de compra de cartas apenas no turno do jogador
-    if contador_turnos2 >= 1 and not turno_jogador:
-     if len(deck_inimigo.cartas) > 0:
-        # Adiciona uma carta do deck à mão do bot
-        carta_comprada_bot = deck_inimigo.cartas.pop(0)
-        cartas_na_mao_inimigo.append(carta_comprada_bot)      
-
-
-    
     contador_turnos = 0
     contador_turnos2 = 0
      
@@ -247,7 +351,11 @@ while True:
     screen.blit(Slot_B, (590, 200))
     screen.blit(Slot_C, (840, 53))
     
-        
+    screen.blit(Bola, (posicao_bola, 390))
+    
+    if turno_jogador:
+        screen.blit(mensagem_turno, (440, 513))
+            
     pygame.display.update()
     clock.tick(60)
 
