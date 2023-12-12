@@ -98,7 +98,7 @@ def salvar_deck_usuario(deck, nome_arquivo):
                 for carta in deck.cartas
             ]
         }
-        json.dump(deck_info, file)
+        json.dump(deck_info, file, indent=4)
 
 def carta_imagem_para_string(image):
     # Converte a imagem da carta em uma string base64
