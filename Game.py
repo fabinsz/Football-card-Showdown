@@ -562,14 +562,14 @@ while True:
             mostra_texto = (now // 500) % 2 == 0
             
             if mostra_texto:
-                texto_surface = mensage_font2.render(f' {percentual_jogador}%', True, (255, 0, 0))
+                texto_surface = mensage_font2.render(f' {percentual_jogador}%', True, (255, 255, 0))
                 screen.blit(texto_surface, (70, 250))
         elif vencedor == 'Bot':
             now = pygame.time.get_ticks()
             mostra_texto_bot = (now // 500) % 2 == 0
            
             if mostra_texto_bot:
-                texto_surface_bot = mensage_font2.render(f' {percentual_bot}%', True, (255, 0, 0))
+                texto_surface_bot = mensage_font2.render(f' {percentual_bot}%', True, (255, 255, 0))
                 screen.blit(texto_surface_bot, (760, 250))
 
     
