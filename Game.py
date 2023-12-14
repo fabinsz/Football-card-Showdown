@@ -19,6 +19,7 @@ mensagem_turno = mensage_font.render('É a sua vez!', True, (255, 255, 255))
 
 mensagem_gol = mensage_font1.render('GOOOLLL!', True, (255, 255, 0))
 mensagem_errou = mensage_font1.render('ERROOU!', True, (255, 255, 0))
+mensagem_p = mensage_font1.render('Preparando chute...', True, (255, 255, 0))
 
 # Carrega e redimensiona a imagem de fundo
 background_surface = pygame.image.load('Imagens/Jogo/fundo_game.jpg')
@@ -164,6 +165,7 @@ while True:
            if turno_jogador: 
             gol = False
             errou = False
+            vencedor = False
              
             for carta in cartas_na_mao:
                 if carta.rect.collidepoint(event.pos):
@@ -571,10 +573,13 @@ while True:
             if mostra_texto_bot:
                 texto_surface_bot = mensage_font2.render(f' {percentual_bot}%', True, (255, 255, 0))
                 screen.blit(texto_surface_bot, (760, 250))
-
+    
     
     if turno_jogador:
         screen.blit(mensagem_turno, (440, 513))
+    else:
+        screen.blit(mensagem_p, (320, 170))
+          
     if gol:
         
         screen.blit(mensagem_gol, (400, 170))  
