@@ -1,10 +1,20 @@
 import pygame
 import sys
 import random
+import os
 from EditorDeck import carregar_deck_usuario , criar_cartas_disponiveis , Deck
 from Classes.carta import Carta
 from Classes.Bot import escolher_carta_bot
 
+brown_color = (73, 49, 49)
+yellow_color = (248, 245, 28)
+red_color = (251, 7, 7)
+white_color = (255, 255, 255)
+black_color = (0, 0, 0)
+
+button_font = pygame.font.Font('Fontes/Bahnschrift.ttf', 24)
+rectangle = pygame.Surface((305, 755))
+rectangle.fill(brown_color)
 
 pygame.init()
 screen_width, screen_height = 1043, 755
@@ -55,7 +65,7 @@ for indice in indices_cartas_aleatorias:
 # Criar uma lista para armazenar as cartas na mão do inimigo
 cartas_na_mao_inimigo = []
 
-# Adicionar 3 cartas aleatórias do deck do inimigo à mão do inimigo
+
 indices_cartas_mao_aleatorias = random.sample(range(len(deck_inimigo.cartas)), 4)
 
 for indice in indices_cartas_mao_aleatorias:
@@ -155,6 +165,38 @@ vencedor = None
 gol = None
 errou = None
 
+nome_ultima_carta_jogada_bot = ""
+nome_ultima_carta_jogada_jogador = ""
+
+ambos_sem_cartas = False
+
+# Adicione esta função para verificar se ambos os jogadores não têm mais cartas
+def ambos_sem_cartas_na_mao(cartas, cartas_bot):
+    return not cartas and not cartas_bot
+
+largura, altura = 990, 400
+
+def create_button(text, font, text_color, button_color, btn_width, btn_height, position):
+    btn_surface = pygame.Surface((btn_width, btn_height))
+    btn_surface.fill(button_color)
+    text_surface = font.render(text, True, text_color)
+    text_rect = text_surface.get_rect(center=(btn_width // 2, btn_height // 2))
+    btn_surface.blit(text_surface, text_rect)
+
+    # Adiciona borda preta
+    pygame.draw.rect(btn_surface, black_color, btn_surface.get_rect(), 2)
+
+    button_rect = btn_surface.get_rect(center=position)
+    return btn_surface, button_rect
+
+btn_width = 232
+btn_height = 41
+# Calcula a posição central horizontal da tela
+center_x = 500
+button_voltar, button_rect1 = create_button(
+    'Voltar', button_font, black_color, white_color,
+    btn_width, btn_height, (center_x, 450)
+)
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -162,6 +204,12 @@ while True:
             sys.exit()
         
         elif event.type == pygame.MOUSEBUTTONDOWN:
+           if button_rect1.collidepoint(event.pos):
+                pygame.quit()
+                Menu_script = os.path.join(os.path.dirname(__file__), "Menu_inicial.py")
+                os.system(f"python {Menu_script}")
+                sys.exit()
+           
            if turno_jogador: 
             gol = False
             errou = False
@@ -230,6 +278,10 @@ while True:
                         nova_posicao_x = 850  
                         nova_posicao_y = 70  
                         carta.rect.topleft = (nova_posicao_x, nova_posicao_y)
+                        nova_posicao = posicao_bola + 175
+                        posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao))
+                        percentual_jogador = percentual_jogador + 25
+                        percentual_bot = percentual_bot -25
    
                         
                     elif carta.nome in ['Chute livre']:
@@ -272,6 +324,7 @@ while True:
                         carta.rect.topleft = (nova_posicao_x, nova_posicao_y) 
                         ultima_posicao_carta_jogada = carta.rect.topleft    
                     
+                    nome_ultima_carta_jogada_jogador = carta.nome
                     turno_jogador = False
                     contador_turnos += 1 
            
@@ -365,9 +418,13 @@ while True:
                 nova_posicao_x_bot = 850  
                 nova_posicao_y_bot = 70  
                 carta_bot.rect.topleft = (nova_posicao_x_bot, nova_posicao_y_bot)
+                nova_posicao1 = posicao_bola - 175
+                posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao1))
+                percentual_bot = percentual_bot + 25
+                percentual_jogador = percentual_jogador -25
                                            
                             
-            elif carta_bot.nome in ['Goleiro',]:
+            elif carta_bot.nome in ['Goleiro']:
                 cartas_slot_a.append(carta_bot)
                 cartas_na_mao_inimigo.remove(carta_bot)
                 nova_posicao_x_bot = 280  
@@ -382,7 +439,10 @@ while True:
                 nova_posicao_y_bot = 217  
                 carta_bot.rect.topleft = (nova_posicao_x_bot, nova_posicao_y_bot)
                 ultima_posicao_carta_jogada_bot = carta_bot.rect.topleft    
-                                
+            
+            nome_ultima_carta_jogada_bot = carta_bot.nome    
+            
+        ambos_sem_cartas = ambos_sem_cartas_na_mao(cartas_na_mao, cartas_na_mao_inimigo)      
         contador_turnos += 1 
                             
         if contador_turnos >= 1 and not turno_jogador:
@@ -414,43 +474,79 @@ while True:
            if ultima_posicao_carta_jogada is not None or ultima_posicao_carta_jogada_bot is not None:
         # Verifica se a última carta jogada está na posição específica com uma tolerância de 5 pixels
            
-             if 275 <= ultima_posicao_carta_jogada[0] <= 285 and 212 <= ultima_posicao_carta_jogada[1] <= 222 or 275 <= ultima_posicao_carta_jogada_bot[0] <= 285 and 212 <= ultima_posicao_carta_jogada_bot[1] <= 222:
-              print("Há uma carta na posição (280, 217) do slot A!")
-              if cartas_slot_a:
-                carta_no_slot = cartas_slot_a[-1]  # Pega a última carta adicionada ao slot A
-                print(f"A carta no Slot A é: {carta_no_slot.nome}")
+            if 275 <= ultima_posicao_carta_jogada[0] <= 285 and 212 <= ultima_posicao_carta_jogada[1] <= 222 or 275 <= ultima_posicao_carta_jogada_bot[0] <= 285 and 212 <= ultima_posicao_carta_jogada_bot[1] <= 222:
+                print("Há uma carta na posição (280, 217) do slot A!")
+                if cartas_slot_a:
                 
-              
-                if percentual_jogador >= random.randint(0, 100):  
-                               
-                 print("GOL! O Jogador marcou!")                
-                 pontos_jogador += 1
-                 posicao_bola = 480
-                 percentual_bot = 50
-                 percentual_jogador = 50
-                 gol = True
+                 carta_no_slot = cartas_slot_a[-1]  # Pega a última carta adicionada ao slot A
+                 print(f"A carta no Slot A é: {carta_no_slot.nome}")
+                
+                
+                 if carta_no_slot.nome == 'Pressão':
+                  nova_posicao1 = posicao_bola -175
+                  posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao1))
+                  percentual_jogador = percentual_jogador -25
+                  percentual_bot = percentual_bot + 25
+                  cartas_slot_a.remove(carta_no_slot)
+                
+                 elif carta_no_slot.nome == 'Goleiro':
+                  nova_posicao1 = posicao_bola
+                  posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao1))
+                  percentual_jogador =  35
+                  cartas_slot_a.remove(carta_no_slot)
+                 
+                 elif carta_no_slot.nome == 'Gol de ouro':
+                  nova_posicao1 = posicao_bola
+                  posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao1))
+                  percentual_jogador =  100
+                  percentual_bot = 0
+                  cartas_slot_a.remove(carta_no_slot)                                  
+                  if cartas_na_mao:
+                    carta_removida = random.choice(cartas_na_mao)
+                    cartas_na_mao.remove(carta_removida)
+                 
+                 elif carta_no_slot.nome == 'Chute livre':
+                   nova_posicao1 = posicao_bola
+                   posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao1))
+                   percentual_jogador = 75
+                   percentual_bot = 25
+                   cartas_slot_a.remove(carta_no_slot)
+                 
+                 elif carta_no_slot.nome == 'Penalti':
+                   nova_posicao1 = posicao_bola
+                   posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao1))
+                   percentual_jogador = 85
+                   percentual_bot = 15
+                   cartas_slot_a.remove(carta_no_slot)      
                   
-                
+                    
+                  
+                  
+                 
+                 
+                if percentual_jogador >= random.randint(0, 100):
+                    print("GOL! O Jogador marcou!")
+                    pontos_jogador += 1
+                    posicao_bola = 480
+                    percentual_bot = 50
+                    percentual_jogador = 50
+                    gol = True
+
                 else:
-                 
-                                  
-                 print("Errou! O Jogador não marcou.")  
-                 
-                errou  = True
-              else:
-               percentual_jogador >=  random.randint(0, 100)  ==  print("GOL! O Jogador marcou!") 
-                                                            
-               pontos_jogador += 1
-               posicao_bola = 480
-               percentual_bot = 50
-               percentual_jogador = 50
-               
-               gol = True
-              
-             else:  
-                                                               
-                 print("Errou! O Jogador não marcou.")  
-                 errou = True
+                    print("Errou! O Jogador não marcou.")
+                    errou = True
+
+            elif percentual_jogador >= random.randint(0, 100):
+                print("GOL! O Jogador marcou!")
+                pontos_jogador += 1
+                posicao_bola = 480
+                percentual_bot = 50
+                percentual_jogador = 50
+                gol = True
+
+            else:
+                print("Errou! O Jogador não marcou.")
+                errou = True
                  
                    
         if vencedor == 'Bot':
@@ -461,10 +557,49 @@ while True:
               if 595 <= ultima_posicao_carta_jogada_bot[0] <= 605 and 212 <= ultima_posicao_carta_jogada_bot[1] <= 222 or 595 <= ultima_posicao_carta_jogada[0] <= 605 and 212 <= ultima_posicao_carta_jogada[1] <= 222:
                 print("Há uma carta na posição (600, 217) do slot B!")
                 if cartas_slot_b:
-                 carta_no_slot = cartas_slot_b[-1]  # Pega a última carta adicionada ao slot B
-                 print(f"A carta no Slot B é: {carta_no_slot.nome}")
+                 carta_no_slot1 = cartas_slot_b[-1]  # Pega a última carta adicionada ao slot B
+                 print(f"A carta no Slot B é: {carta_no_slot1.nome}")
+                 if carta_no_slot1.nome == 'Pressão':
+                  nova_posicao2 = posicao_bola + 175
+                  posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao2))
+                  percentual_bot = percentual_bot - 25
+                  percentual_jogador = percentual_jogador + 25
+                  cartas_slot_b.remove(carta_no_slot1)
+                
+                 elif carta_no_slot1.nome == 'Goleiro':
+                  nova_posicao2 = posicao_bola
+                  posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao2))
+                  percentual_bot = 35
+                  cartas_slot_b.remove(carta_no_slot1)   
                  
-                 if percentual_bot >= random.randint(0, 100):
+                 elif carta_no_slot1.nome == 'Gol de ouro':
+                  nova_posicao2 = posicao_bola
+                  posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao2))
+                  percentual_jogador = 0
+                  percentual_bot = 100
+                  cartas_slot_b.remove(carta_no_slot1)                                  
+                  if cartas_na_mao_inimigo:
+                    carta_removida = random.choice(cartas_na_mao_inimigo)
+                    cartas_na_mao_inimigo.remove(carta_removida)
+                 
+                 elif carta_no_slot1.nome == 'Chute livre':
+                   nova_posicao2 = posicao_bola
+                   posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao2))
+                   percentual_jogador = 25
+                   percentual_bot = 75
+                   cartas_slot_b.remove(carta_no_slot1) 
+                 
+                 elif carta_no_slot1.nome == 'Penalti':
+                   nova_posicao2 = posicao_bola
+                   posicao_bola = max(limite_minimo, min(limite_maximo, nova_posicao2))
+                   percentual_jogador = 15
+                   percentual_bot = 85
+                   cartas_slot_b.remove(carta_no_slot1)   
+                   
+                     
+                  
+                
+                if percentual_bot >= random.randint(0, 100):
                    
                                      
                    print("GOL! o bot marcou!")                    
@@ -475,15 +610,15 @@ while True:
                    
                    gol = True
                    
-                 else:                   
+                else:                   
                    
                    print("Errou! o  bot não marcou!")
                    errou = True
                      
                    
-                else:
+              elif percentual_bot >= random.randint(0, 100):
                   
-                  percentual_bot >= random.randint(0, 100) == print("GOL! o  bot marcou!")                   
+                  print("GOL! o  bot marcou!")                   
                                     
                   tempo_inicio_mensagem = pygame.time.get_ticks()
                   tempo_decorrido_mensagem = 0
@@ -493,11 +628,11 @@ while True:
                   percentual_bot = 50
                   percentual_jogador = 50
                   gol = True
-
-              else:                 
-                                                   
-                  print("Errou! o bot não marcou!")
-                  errou = True
+              
+              else:    
+                print("Errou! o  bot não marcou!")
+                errou = True
+             
                   
                  
       
@@ -558,6 +693,10 @@ while True:
 
     renderizar_texto(f' {pontos_jogador} x {pontos_bot} ', (400, 230))
     
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    
+    button_rect1_color = black_color if not button_rect1.collidepoint(mouse_x, mouse_y) else red_color
+    
     if vencedor:
         if vencedor == 'Jogador':
             now = pygame.time.get_ticks()
@@ -585,7 +724,33 @@ while True:
         screen.blit(mensagem_gol, (400, 170))  
     elif errou:
         
-        screen.blit(mensagem_errou, (400, 170))           
+        screen.blit(mensagem_errou, (400, 170))          
+    renderizar_texto(f'Carta jogada_Bot: {nome_ultima_carta_jogada_bot}', (400, 0), cor=(255, 255, 255), tamanho=15) 
+    renderizar_texto(f'Carta jogada: {nome_ultima_carta_jogada_jogador}', (400, 730), cor=(255, 255, 255), tamanho=15)  
+    
+    if ambos_sem_cartas:
+        pygame.draw.rect(screen, (73, 49, 49), (250, 150, 500, 400))  # Cores: (vermelho, verde, azul)
+        screen.blit(button_voltar, button_rect1)
+        pygame.draw.rect(screen, button_rect1_color, button_rect1, 2)
+    
+    if ambos_sem_cartas:
+        if pontos_jogador > pontos_bot:
+            mensagem = "Você ganhou!"
+        elif pontos_jogador < pontos_bot:
+            mensagem = "Você perdeu!"
+        else:
+            mensagem = "Empate!"
+        
+        mensagem += f" {pontos_jogador} x {pontos_bot}"
+    else:
+        mensagem = ""
+    
+    if mensagem:
+        fonte = mensage_font1
+        texto = fonte.render(mensagem, True, (255, 255, 255))
+        screen.blit(texto, (largura // 2 - texto.get_width() // 2, altura // 2 - texto.get_height() // 2))
+    
+  
     pygame.display.update()
     clock.tick(60)
 
