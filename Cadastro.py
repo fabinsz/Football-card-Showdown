@@ -90,7 +90,7 @@ text_4.topleft = (30, 420)  # Ajuste o valor vertical conforme necessário
 
 # Variável para controle do cadastro
 cadastro_sucesso = False
-
+warning_text = None  # Defina a variável para o aviso fora do loop principal
 
 while True:
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -119,9 +119,8 @@ while True:
                         print("Dados do jogador salvos com sucesso!")
                         cadastro_sucesso = True  # Altera para True após o cadastro
                     else:
-                        print("Senhas não coincidem!")
-                else:
-                    print("Preencha todos os campos!")
+                        # Se as senhas não coincidirem, define o aviso
+                        warning_text = main_font.render('Senhas não coincidem!', True, (255, 0, 0))  # Vermelho
 
         # Captura a entrada do teclado para os campos de texto
         if event.type == pygame.KEYDOWN:
@@ -210,6 +209,11 @@ while True:
     draw_text_in_box(screen, username_text, white_color, username_box, main_font)
     draw_text_in_box(screen, '*' * len(password_text), white_color, password_box, main_font)  # Para senha, exibe asteriscos
     draw_text_in_box(screen, '*' * len(confirm_password_text), white_color, confirm_password_box, main_font)  # Confirmar senha também exibe asteriscos
+
+ # Desenha o texto de aviso se as senhas não coincidirem e o botão de ok for pressionado
+    if warning_text:
+        screen.blit(warning_text, (30, 480))  # Posição do aviso na tela
+
 
 # Se o cadastro foi bem-sucedido, ao pressionar o botão de seta, vá para a página de login
     if cadastro_sucesso and arrow_hovered:
